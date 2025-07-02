@@ -42,16 +42,7 @@
       <input id="email" type="email">
     </label>
 
-    <!-- Phone Fields -->
-    <label class="form-field">Phone Number 1:
-      <select id="phoneLabel1">
-        <option>Tel</option>
-        <option>Mobile</option>
-        <option>Fax</option>
-        <option>Direct</option>
-      </select><br>
-      <input id="phone1" type="tel">
-    </label>
+    <!-- Optional Phone Fields -->
     <label class="form-field">Phone Number 2 (optional):
       <select id="phoneLabel2">
         <option>Mobile</option>
@@ -102,7 +93,7 @@
 
       // Regenerate on any input
       document.querySelectorAll(
-        '#center, #address1, #address2, #fullname, #title, #email, #phone1, #phone2, #phone3, #phoneLabel1, #phoneLabel2, #phoneLabel3'
+        '#center, #address1, #address2, #fullname, #title, #email, #phone2, #phone3, #phoneLabel2, #phoneLabel3'
       ).forEach(el => el.addEventListener('input', generateSignature));
 
       function generateSignature() {
@@ -110,8 +101,6 @@
         const name = document.getElementById('fullname').value.trim();
         const title = document.getElementById('title').value.trim();
         const email = document.getElementById('email').value.trim();
-        const phone1 = document.getElementById('phone1').value.trim();
-        const phoneLabel1 = document.getElementById('phoneLabel1').value;
         const phone2 = document.getElementById('phone2').value.trim();
         const phoneLabel2 = document.getElementById('phoneLabel2').value;
         const phone3 = document.getElementById('phone3').value.trim();
@@ -119,24 +108,25 @@
         const remoteAddr1 = document.getElementById('address1').value.trim();
         const remoteAddr2 = document.getElementById('address2').value.trim();
 
-        // Must have an office selected and all required fields
-        if (!center || !name || !title || !email || !phone1) {
+        // Required fields: office, name, title, email
+        if (!center || !name || !title || !email) {
           document.getElementById('signatureOutput').innerHTML = "Please complete all required fields.";
           return;
         }
-        // Remote must fill both lines
+        // Remote office requires both address lines
         if (center === 'remote' && (!remoteAddr1 || !remoteAddr2)) {
           document.getElementById('signatureOutput').innerHTML = "Please enter your full address.";
           return;
         }
 
-        // Determine which address to use
+        // Use main office or remote address
         const centerName = offices.main.name;
         const addr1 = center === 'main' ? offices.main.address1 : remoteAddr1;
         const addr2 = center === 'main' ? offices.main.address2 : remoteAddr2;
 
-        // Build phone lines
-        const phoneLine1 = `<span style="color:#6e6e6e;">${phoneLabel1}:</span> <a href="tel:${phone1}" style="color:#6e6e6e;text-decoration:none;">${phone1}</a><br>`;
+        // Fixed Main phone line
+        const phoneLine1 = `<span style="color:#6e6e6e;">Main:</span> <a href="tel:+17145477325" style="color:#6e6e6e;text-decoration:none;">(714) 547‑7325</a><br>`;
+        // Optional phone lines
         const phoneLine2 = phone2
           ? `<span style="color:#6e6e6e;">${phoneLabel2}:</span> <a href="tel:${phone2}" style="color:#6e6e6e;text-decoration:none;">${phone2}</a><br>`
           : '';
@@ -144,7 +134,7 @@
           ? `<span style="color:#6e6e6e;">${phoneLabel3}:</span> <a href="tel:${phone3}" style="color:#6e6e6e;text-decoration:none;">${phone3}</a><br>`
           : '';
 
-        // Signature HTML
+        // Build signature
         const sig = `
 <table cellpadding="0" cellspacing="0" style="font-family:'Readex Pro',Arial,sans-serif;font-size:12px;color:#6e6e6e;line-height:1.2;">
   <tr>
@@ -152,9 +142,7 @@
       <p style="margin:0;font-size:15px;font-weight:600;color:#e43926;">${name}</p>
       <p style="margin:0;font-weight:500;">${title}</p>
       <p style="margin:0;font-weight:500;">${centerName}</p>
-      <p style="margin:8px 0 0 0;">
-        ${addr1}<br>${addr2}
-      </p>
+      <p style="margin:8px 0 0 0;">${addr1}<br>${addr2}</p>
       <p style="margin:4px 0;">
         ${phoneLine1}${phoneLine2}${phoneLine3}
         <a href="mailto:${email}" style="color:#6e6e6e;text-decoration:none;">${email}</a><br>
