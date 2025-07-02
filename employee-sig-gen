@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <base target="_top">
+    <style>
+      body { font-family: 'Readex Pro', Arial, sans-serif; padding: 2em; }
+      .form-field { display: block; margin-bottom: 25px; max-width: 400px; width: 100%; }
+      select, input { padding: 6px; width: 100%; box-sizing: border-box; }
+      .signature { margin-top: 2em; border: 1px solid #ccc; padding: 1em; background: #ffffff; }
+    </style>
+  </head>
+  <body>
+    <h2>CASRF Employee Email Signature Generator</h2>
+
+    <!-- Office Selector -->
+    <label class="form-field" for="center">Choose your Office:
+      <select id="center">
+        <option value="">-- Select Office --</option>
+        <option value="main">CASRF Employee – MAIN Office</option>
+        <option value="remote">CASRF Employee – Remote Office</option>
+      </select>
+    </label>
+
+    <!-- Remote Address Fields (hidden by default) -->
+    <label class="form-field" id="address1-field" style="display:none;" for="address1">Address Line 1:
+      <input id="address1" type="text">
+    </label>
+    <label class="form-field" id="address2-field" style="display:none;" for="address2">Address Line 2:
+      <input id="address2" type="text">
+    </label>
+
+    <!-- Common Fields -->
+    <label class="form-field" for="fullname">Full Name:
+      <input id="fullname" type="text">
+    </label>
+    <label class="form-field" for="title">Title:
+      <input id="title" type="text">
+    </label>
+    <label class="form-field" for="email">Email Address:
+      <input id="email" type="email">
+    </label>
+
+    <!-- Phone Fields -->
+    <label class="form-field">Phone Number 1:
+      <select id="phoneLabel1">
+        <option>Tel</option>
+        <option>Mobile</option>
+        <option>Fax</option>
+      </select><br>
+      <input id="phone1" type="tel">
+    </label>
+    <label class="form-field">Phone Number 2 (optional):
+      <select id="phoneLabel2">
+        <option>Mobile</option>
+        <option>Fax</option>
+      </select><br>
+      <input id="phone2" type="tel">
+    </label>
+
+    <!-- Signature Preview -->
+    <div class="signature" id="signatureOutput">
+      Your signature will appear here.
+    </div>
+
+    <script>
+      // Pre-defined MAIN office data
+      const offices = {
+        main: {
+          name: "California Scottish Rite Foundation",
+          address1: "303 W Lincoln Ave., Ste. 150",
+          address2: "Anaheim, CA 92805"
+        }
+      };
+
+      const centerSelect = document.getElementById('center');
+      const addr1Field = document.getElementById('address1-field');
+      const addr2Field = document.getElementById('address2-field');
+
+      // Show/hide remote address fields
+      centerSelect.addEventListener('change', () => {
+        if (centerSelect.value === 'remote') {
+          addr1Field.style.display = 'block';
+          addr2Field.style.display = 'block';
+        } else {
+          addr1Field.style.display = 'none';
+          addr2Field.style.display = 'none';
+        }
+        generateSignature();
+      });
+
+      // Regenerate on any input
+      document.querySelectorAll(
+        '#center, #address1, #address2, #fullname, #title, #email, #phone1, #phone2, #phoneLabel1, #phoneLabel2'
+      ).forEach(el => el.addEventListener('input', generateSignature));
+
+      function generateSignature() {
+        const center = centerSelect.value;
+        const name = document.getElementById('fullname').value.trim();
+        const title = document.getElementById('title').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const phone1 = document.getElementById('phone1').value.trim();
+        const phoneLabel1 = document.getElementById('phoneLabel1').value;
+        const phone2 = document.getElementById('phone2').value.trim();
+        const phoneLabel2 = document.getElementById('phoneLabel2').value;
+        const remoteAddr1 = document.getElementById('address1').value.trim();
+        const remoteAddr2 = document.getElementById('address2').value.trim();
+
+        // Must have an office selected and all required fields
+        if (!center || !name || !title || !email || !phone1) {
+          document.getElementById('signatureOutput').innerHTML = "Please complete all required fields.";
+          return;
+        }
+        // Remote must fill both lines
+        if (center === 'remote' && (!remoteAddr1 || !remoteAddr2)) {
+          document.getElementById('signatureOutput').innerHTML = "Please enter your full address.";
+          return;
+        }
+
+        // Determine which address to use
+        const centerName = offices.main.name;
+        const addr1 = center === 'main' ? offices.main.address1 : remoteAddr1;
+        const addr2 = center === 'main' ? offices.main.address2 : remoteAddr2;
+
+        // Build phone lines
+        const phoneLine1 = `<span style="color:#6e6e6e;">${phoneLabel1}:</span> <a href="tel:${phone1}" style="color:#6e6e6e;text-decoration:none;">${phone1}</a><br>`;
+        const phoneLine2 = phone2
+          ? `<span style="color:#6e6e6e;">${phoneLabel2}:</span> <a href="tel:${phone2}" style="color:#6e6e6e;text-decoration:none;">${phone2}</a><br>`
+          : '';
+
+        // Signature HTML
+        const sig = `
+<table cellpadding="0" cellspacing="0" style="font-family:'Readex Pro',Arial,sans-serif;font-size:12px;color:#6e6e6e;line-height:1.2;">
+  <tr>
+    <td style="vertical-align:top;">
+      <p style="margin:0;font-size:15px;font-weight:600;color:#e43926;">${name}</p>
+      <p style="margin:0;font-weight:500;">${title}</p>
+      <p style="margin:0;font-weight:500;">${centerName}</p>
+      <p style="margin:8px 0 0 0;">
+        ${addr1}<br>${addr2}
+      </p>
+      <p style="margin:4px 0;">
+        ${phoneLine1}${phoneLine2}
+        <a href="mailto:${email}" style="color:#6e6e6e;text-decoration:none;">${email}</a><br>
+        <a href="https://casrf.org" style="color:#6e6e6e;text-decoration:none;">casrf.org</a>
+      </p>
+      <p style="margin-top:12px;">
+        <img src="https://static.wixstatic.com/shapes/6ab9c9_27f9ca1905704c89be99955be846fe83.svg"
+             alt="California Scottish Rite Foundation Logo"
+             style="width:120px;height:auto;border:none;">
+      </p>
+    </td>
+  </tr>
+</table>`;
+        document.getElementById('signatureOutput').innerHTML = sig;
+      }
+    </script>
+  </body>
+</html>
