@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8">
     <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
     <base target="_top">
     <style>
@@ -47,6 +48,7 @@
         <option>Tel</option>
         <option>Mobile</option>
         <option>Fax</option>
+        <option>Direct</option>
       </select><br>
       <input id="phone1" type="tel">
     </label>
@@ -54,8 +56,17 @@
       <select id="phoneLabel2">
         <option>Mobile</option>
         <option>Fax</option>
+        <option>Direct</option>
       </select><br>
       <input id="phone2" type="tel">
+    </label>
+    <label class="form-field">Phone Number 3 (optional):
+      <select id="phoneLabel3">
+        <option>Mobile</option>
+        <option>Fax</option>
+        <option>Direct</option>
+      </select><br>
+      <input id="phone3" type="tel">
     </label>
 
     <!-- Signature Preview -->
@@ -91,7 +102,7 @@
 
       // Regenerate on any input
       document.querySelectorAll(
-        '#center, #address1, #address2, #fullname, #title, #email, #phone1, #phone2, #phoneLabel1, #phoneLabel2'
+        '#center, #address1, #address2, #fullname, #title, #email, #phone1, #phone2, #phone3, #phoneLabel1, #phoneLabel2, #phoneLabel3'
       ).forEach(el => el.addEventListener('input', generateSignature));
 
       function generateSignature() {
@@ -103,6 +114,8 @@
         const phoneLabel1 = document.getElementById('phoneLabel1').value;
         const phone2 = document.getElementById('phone2').value.trim();
         const phoneLabel2 = document.getElementById('phoneLabel2').value;
+        const phone3 = document.getElementById('phone3').value.trim();
+        const phoneLabel3 = document.getElementById('phoneLabel3').value;
         const remoteAddr1 = document.getElementById('address1').value.trim();
         const remoteAddr2 = document.getElementById('address2').value.trim();
 
@@ -127,6 +140,9 @@
         const phoneLine2 = phone2
           ? `<span style="color:#6e6e6e;">${phoneLabel2}:</span> <a href="tel:${phone2}" style="color:#6e6e6e;text-decoration:none;">${phone2}</a><br>`
           : '';
+        const phoneLine3 = phone3
+          ? `<span style="color:#6e6e6e;">${phoneLabel3}:</span> <a href="tel:${phone3}" style="color:#6e6e6e;text-decoration:none;">${phone3}</a><br>`
+          : '';
 
         // Signature HTML
         const sig = `
@@ -140,7 +156,7 @@
         ${addr1}<br>${addr2}
       </p>
       <p style="margin:4px 0;">
-        ${phoneLine1}${phoneLine2}
+        ${phoneLine1}${phoneLine2}${phoneLine3}
         <a href="mailto:${email}" style="color:#6e6e6e;text-decoration:none;">${email}</a><br>
         <a href="https://casrf.org" style="color:#6e6e6e;text-decoration:none;">casrf.org</a>
       </p>
