@@ -24,10 +24,10 @@
     </label>
 
     <!-- Remote Address Fields (hidden by default) -->
-    <label class="form-field" id="address1-field" style="display:none;" for="address1">Address Line 1:
+    <label class="form-field" id="address1-field" style="display:none;" for="address1">Street Address:
       <input id="address1" type="text">
     </label>
-    <label class="form-field" id="address2-field" style="display:none;" for="address2">Address Line 2:
+    <label class="form-field" id="address2-field" style="display:none;" for="address2">City, State Zip Code:
       <input id="address2" type="text">
     </label>
 
@@ -40,6 +40,17 @@
     </label>
     <label class="form-field" for="email">Email Address:
       <input id="email" type="email">
+    </label>
+
+    <!-- Phone Number 1 Field -->
+    <label class="form-field" for="phone1">Phone Number 1:
+      <select id="phoneLabel1">
+        <option>Tel</option>
+        <option>Mobile</option>
+        <option>Fax</option>
+        <option>Direct</option>
+      </select><br>
+      <input id="phone1" type="tel">
     </label>
 
     <!-- Optional Phone Fields -->
@@ -93,14 +104,25 @@
 
       // Regenerate on any input
       document.querySelectorAll(
-        '#center, #address1, #address2, #fullname, #title, #email, #phone2, #phone3, #phoneLabel2, #phoneLabel3'
+        '#center, #address1, #address2, #fullname, #title, #email, #phone1, #phoneLabel1, #phone2, #phoneLabel2, #phone3, #phoneLabel3'
       ).forEach(el => el.addEventListener('input', generateSignature));
+
+      function formatPhone(number) {
+        // Remove non-digits
+        const digits = number.replace(/\D/g, '');
+        if (digits.length === 10) {
+          return `(${digits.slice(0,3)}) ${digits.slice(3,6)}-${digits.slice(6)}`;
+        }
+        return number;
+      }
 
       function generateSignature() {
         const center = centerSelect.value;
         const name = document.getElementById('fullname').value.trim();
         const title = document.getElementById('title').value.trim();
         const email = document.getElementById('email').value.trim();
+        const phone1 = document.getElementById('phone1').value.trim();
+        const phoneLabel1 = document.getElementById('phoneLabel1').value;
         const phone2 = document.getElementById('phone2').value.trim();
         const phoneLabel2 = document.getElementById('phoneLabel2').value;
         const phone3 = document.getElementById('phone3').value.trim();
@@ -108,8 +130,8 @@
         const remoteAddr1 = document.getElementById('address1').value.trim();
         const remoteAddr2 = document.getElementById('address2').value.trim();
 
-        // Required fields: office, name, title, email
-        if (!center || !name || !title || !email) {
+        // Required fields: office, name, title, email, phone1
+        if (!center || !name || !title || !email || !phone1) {
           document.getElementById('signatureOutput').innerHTML = "Please complete all required fields.";
           return;
         }
@@ -124,38 +146,28 @@
         const addr1 = center === 'main' ? offices.main.address1 : remoteAddr1;
         const addr2 = center === 'main' ? offices.main.address2 : remoteAddr2;
 
-        // Fixed Main phone line
-        const phoneLine1 = `<span style="color:#6e6e6e;">Main:</span> <a href="tel:+17145477325" style="color:#6e6e6e;text-decoration:none;">(714) 547‑7325</a><br>`;
-        // Optional phone lines
+        // Build phone lines
+        const phoneLine1 = `<span style="color:#6e6e6e;">${phoneLabel1}:</span> ${formatPhone(phone1)}<br>`;
         const phoneLine2 = phone2
-          ? `<span style="color:#6e6e6e;">${phoneLabel2}:</span> <a href="tel:${phone2}" style="color:#6e6e6e;text-decoration:none;">${phone2}</a><br>`
+          ? `<span style="color:#6e6e6e;">${phoneLabel2}:</span> ${formatPhone(phone2)}<br>`
           : '';
         const phoneLine3 = phone3
-          ? `<span style="color:#6e6e6e;">${phoneLabel3}:</span> <a href="tel:${phone3}" style="color:#6e6e6e;text-decoration:none;">${phone3}</a><br>`
+          ? `<span style="color:#6e6e6e;">${phoneLabel3}:</span> ${formatPhone(phone3)}<br>`
           : '';
 
-        // Build signature
+        // Signature HTML
         const sig = `
-<table cellpadding="0" cellspacing="0" style="font-family:'Readex Pro',Arial,sans-serif;font-size:12px;color:#6e6e6e;line-height:1.2;">
-  <tr>
-    <td style="vertical-align:top;">
-      <p style="margin:0;font-size:15px;font-weight:600;color:#e43926;">${name}</p>
-      <p style="margin:0;font-weight:500;">${title}</p>
-      <p style="margin:0;font-weight:500;">${centerName}</p>
-      <p style="margin:8px 0 0 0;">${addr1}<br>${addr2}</p>
-      <p style="margin:4px 0;">
-        ${phoneLine1}${phoneLine2}${phoneLine3}
-        <a href="mailto:${email}" style="color:#6e6e6e;text-decoration:none;">${email}</a><br>
-        <a href="https://casrf.org" style="color:#6e6e6e;text-decoration:none;">casrf.org</a>
-      </p>
-      <p style="margin-top:12px;">
-        <img src="https://github.com/casrfdev/casrf-signature-generator/blob/main/CASRF-500x500.png?raw=true"
-             alt="California Scottish Rite Foundation Logo"
-             style="width:120px;height:auto;border:none;">
-      </p>
-    </td>
-  </tr>
-</table>`;
+<div style="font-family:'Readex Pro',Arial,sans-serif;font-size:12px;color:#6e6e6e;line-height:1.2;">
+  <strong style="color:#e43926;font-size:15px;">${name}</strong><br>
+  ${title}<br>
+  ${centerName}<br>
+  ${addr1}<br>
+  ${addr2}<br>
+  ${phoneLine1}${phoneLine2}${phoneLine3}
+  <a href="mailto:${email}" style="color:#6e6e6e;text-decoration:none;">${email}</a><br>
+  <a href="https://casrf.org" style="color:#6e6e6e;text-decoration:none;">casrf.org</a><br>
+  <img src="https://static.wixstatic.com/shapes/6ab9c9_27f9ca1905704c89be99955be846fe83.svg" alt="California Scottish Rite Foundation Logo" style="width:120px;height:auto;border:none;margin-top:12px;">
+</div>`;
         document.getElementById('signatureOutput').innerHTML = sig;
       }
     </script>
