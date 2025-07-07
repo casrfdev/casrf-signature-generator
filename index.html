@@ -27,32 +27,34 @@
         background: #ffffff;
       }
       .sig-text p {
-        margin: 4px 0;
+        margin: 2px 0;
         line-height: 1.4;
         color: #6e6e6e;
       }
       .sig-text .name {
-        font-size: 16px;
+        font-size: 18px;
         font-weight: 700;
         color: #e43926;
-        margin-bottom: 6px;
+        margin-bottom: 4px;
       }
       .sig-text .title,
       .sig-text .org {
         font-size: 14px;
         font-weight: 500;
+        margin-bottom: 4px;
       }
       .sig-text .address,
       .sig-text .contact,
       .sig-text .email {
         font-size: 12px;
+        margin-bottom: 4px;
       }
       .sig-logo {
         margin-top: 12px;
-        text-align: left;
+        text-align: center;
       }
       .sig-logo img {
-        width: 150px;
+        width: 200px;
         height: auto;
         border: none;
       }
@@ -173,9 +175,9 @@
         const centerName = offices.main.name;
         const addr1 = center === 'main' ? offices.main.address1 : remoteAddr1;
         const addr2 = center === 'main' ? offices.main.address2 : remoteAddr2;
-        const phoneLine1 = `<span style="color:#6e6e6e;">${phoneLabel1}:</span> ${formatPhone(phone1)}<br>`;
-        const phoneLine2 = phone2 ? `<span style="color:#6e6e6e;">${phoneLabel2}:</span> ${formatPhone(phone2)}<br>` : '';
-        const phoneLine3 = phone3 ? `<span style="color:#6e6e6e;">${phoneLabel3}:</span> ${formatPhone(phone3)}<br>` : '';
+        const phoneLine1 = `<a href="tel:${phone1}" style="color:#6e6e6e;text-decoration:none;">${formatPhone(phone1)}</a> ${phoneLabel1}<br>`;
+        const phoneLine2 = phone2 ? `<a href="tel:${phone2}" style="color:#6e6e6e;text-decoration:none;">${formatPhone(phone2)}</a> ${phoneLabel2}<br>` : '';
+        const phoneLine3 = phone3 ? `<a href="tel:${phone3}" style="color:#6e6e6e;text-decoration:none;">${formatPhone(phone3)}</a> ${phoneLabel3}<br>` : '';
         const sigHTML = `
 <div class="sig-text">
   <p class="name">${name}</p>
@@ -183,9 +185,9 @@
   <p class="org">${centerName}</p>
   <p class="address">${addr1}<br>${addr2}</p>
   <p class="contact">${phoneLine1}${phoneLine2}${phoneLine3}</p>
-  <p class="email"><a href="mailto:${email}" style="color:#6e6e6e;text-decoration:none;">${email}</a><br><a href="https://casrf.org" style="color:#6e6e6e;text-decoration:none;">casrf.org</a></p>
-  <div class="sig-logo"><img src="https://static.wixstatic.com/shapes/6ab9c9_27f9ca1905704c89be99955be846fe83.svg" alt="California Scottish Rite Foundation Logo"></div>
-</div>`;
+  <p class="email"><a href="mailto:${email}" style="color:#0066cc;text-decoration:none;">${email}</a><br><a href="https://casrf.org" style="color:#0066cc;text-decoration:none;">casrf.org</a></p>
+</div>
+<div class="sig-logo"><img src="https://static.wixstatic.com/shapes/6ab9c9_27f9ca1905704c89be99955be846fe83.svg" alt="California Scottish Rite Foundation Logo"></div>`;
         document.getElementById('signatureOutput').innerHTML = sigHTML;
       }
     </script>
