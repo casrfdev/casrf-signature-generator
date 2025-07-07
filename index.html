@@ -26,30 +26,34 @@
         padding: 1em;
         background: #ffffff;
       }
-      .sig-table {
-        border-collapse: collapse;
-        width: 100%;
+      .sig-text p {
+        margin: 4px 0;
+        font-size: 14px;
+        color: #6e6e6e;
         line-height: 1.4;
       }
-      .sig-table td {
-        vertical-align: top;
-      }
-      .sig-name {
-        margin: 0;
+      .sig-text .name {
         font-size: 16px;
         font-weight: 700;
         color: #e43926;
+        margin-bottom: 6px;
       }
-      .sig-title, .sig-org {
-        margin: 4px 0 0 0;
-        font-size: 14px;
+      .sig-text .title,
+      .sig-text .org {
         font-weight: 500;
-        color: #6e6e6e;
       }
-      .sig-address, .sig-contact, .sig-email {
-        margin: 8px 0 0 0;
+      .sig-text .address,
+      .sig-text .contact,
+      .sig-text .email {
         font-size: 12px;
-        color: #6e6e6e;
+      }
+      .sig-logo {
+        margin-top: 12px;
+      }
+      .sig-logo img {
+        width: 120px;
+        height: auto;
+        border: none;
       }
     </style>
   </head>
@@ -65,7 +69,7 @@
       </select>
     </label>
 
-    <!-- Remote Address Fields (hidden by default) -->
+    <!-- Remote Address Fields -->
     <label class="form-field" id="address1-field" style="display:none;" for="address1">Street Address:
       <input id="address1" type="text">
     </label>
@@ -172,21 +176,15 @@
         const phoneLine2 = phone2 ? `<span style="color:#6e6e6e;">${phoneLabel2}:</span> ${formatPhone(phone2)}<br>` : '';
         const phoneLine3 = phone3 ? `<span style="color:#6e6e6e;">${phoneLabel3}:</span> ${formatPhone(phone3)}<br>` : '';
         const sigHTML = `
-<table class="sig-table">
-  <tr>
-    <td style="padding-right:10px;">
-      <img src="https://static.wixstatic.com/shapes/6ab9c9_27f9ca1905704c89be99955be846fe83.svg" alt="Logo" style="width:150px;height:auto;border:none;">
-    </td>
-    <td>
-      <p class="sig-name">${name}</p>
-      <p class="sig-title">${title}</p>
-      <p class="sig-org">${centerName}</p>
-      <p class="sig-address">${addr1}<br>${addr2}</p>
-      <p class="sig-contact">${phoneLine1}${phoneLine2}${phoneLine3}</p>
-      <p class="sig-email"><a href="mailto:${email}" style="color:#6e6e6e;text-decoration:none;">${email}</a><br><a href="https://casrf.org" style="color:#6e6e6e;text-decoration:none;">casrf.org</a></p>
-    </td>
-  </tr>
-</table>`;
+<div class="sig-text">
+  <p class="name">${name}</p>
+  <p class="title">${title}</p>
+  <p class="org">${centerName}</p>
+  <p class="address">${addr1}<br>${addr2}</p>
+  <p class="contact">${phoneLine1}${phoneLine2}${phoneLine3}</p>
+  <p class="email"><a href="mailto:${email}" style="color:#6e6e6e;text-decoration:none;">${email}</a><br><a href="https://casrf.org" style="color:#6e6e6e;text-decoration:none;">casrf.org</a></p>
+  <div class="sig-logo"><img src="https://static.wixstatic.com/shapes/6ab9c9_27f9ca1905704c89be99955be846fe83.svg" alt="California Scottish Rite Foundation Logo"></div>
+</div>`;
         document.getElementById('signatureOutput').innerHTML = sigHTML;
       }
     </script>
