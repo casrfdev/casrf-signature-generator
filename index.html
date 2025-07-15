@@ -2,7 +2,10 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    >
     <base target="_top">
     <style>
       body {
@@ -15,7 +18,8 @@
         max-width: 400px;
         width: 100%;
       }
-      select, input {
+      select,
+      input {
         padding: 6px;
         width: 100%;
         box-sizing: border-box;
@@ -53,6 +57,7 @@
       .sig-logo {
         margin-top: 12px;
         text-align: left;
+        padding-left: 10px; /* ← 10px from the left edge */
       }
       .sig-logo img {
         display: block;
@@ -67,7 +72,8 @@
     <h2>CASRF Employee Email Signature Generator</h2>
 
     <!-- Office Selector -->
-    <label class="form-field" for="center">Choose your Office:
+    <label class="form-field" for="center">
+      Choose your Office:
       <select id="center">
         <option value="">-- Select Office --</option>
         <option value="main">CASRF Employee – MAIN Office</option>
@@ -76,26 +82,42 @@
     </label>
 
     <!-- Remote Address Fields -->
-    <label class="form-field" id="address1-field" style="display:none;" for="address1">Street Address:
+    <label
+      class="form-field"
+      id="address1-field"
+      style="display:none;"
+      for="address1"
+    >
+      Street Address:
       <input id="address1" type="text">
     </label>
-    <label class="form-field" id="address2-field" style="display:none;" for="address2">City, State Zip Code:
+    <label
+      class="form-field"
+      id="address2-field"
+      style="display:none;"
+      for="address2"
+    >
+      City, State Zip Code:
       <input id="address2" type="text">
     </label>
 
     <!-- Common Fields -->
-    <label class="form-field" for="fullname">Full Name:
+    <label class="form-field" for="fullname">
+      Full Name:
       <input id="fullname" type="text">
     </label>
-    <label class="form-field" for="title">Title:
+    <label class="form-field" for="title">
+      Title:
       <input id="title" type="text">
     </label>
-    <label class="form-field" for="email">Email Address:
+    <label class="form-field" for="email">
+      Email Address:
       <input id="email" type="email">
     </label>
 
     <!-- Phone Fields -->
-    <label class="form-field" for="phone1">Phone Number 1:
+    <label class="form-field" for="phone1">
+      Phone Number 1:
       <select id="phoneLabel1">
         <option>Tel</option>
         <option>Mobile</option>
@@ -104,7 +126,8 @@
       </select><br>
       <input id="phone1" type="tel">
     </label>
-    <label class="form-field">Phone Number 2 (optional):
+    <label class="form-field">
+      Phone Number 2 (optional):
       <select id="phoneLabel2">
         <option>Mobile</option>
         <option>Fax</option>
@@ -112,7 +135,8 @@
       </select><br>
       <input id="phone2" type="tel">
     </label>
-    <label class="form-field">Phone Number 3 (optional):
+    <label class="form-field">
+      Phone Number 3 (optional):
       <select id="phoneLabel3">
         <option>Mobile</option>
         <option>Fax</option>
@@ -137,6 +161,7 @@
       const centerSelect = document.getElementById('center');
       const addr1Field = document.getElementById('address1-field');
       const addr2Field = document.getElementById('address2-field');
+
       centerSelect.addEventListener('change', () => {
         if (centerSelect.value === 'remote') {
           addr1Field.style.display = 'block';
@@ -147,13 +172,18 @@
         }
         generateSignature();
       });
+
       document.querySelectorAll(
         '#center, #address1, #address2, #fullname, #title, #email, #phone1, #phoneLabel1, #phone2, #phoneLabel2, #phone3, #phoneLabel3'
       ).forEach(el => el.addEventListener('input', generateSignature));
+
       function formatPhone(number) {
         const digits = number.replace(/\D/g, '');
-        return digits.length === 10 ? `(${digits.slice(0,3)}) ${digits.slice(3,6)}-${digits.slice(6)}` : number;
+        return digits.length === 10
+          ? `(${digits.slice(0,3)}) ${digits.slice(3,6)}-${digits.slice(6)}`
+          : number;
       }
+
       function generateSignature() {
         const center = centerSelect.value;
         const name = document.getElementById('fullname').value.trim();
@@ -167,33 +197,49 @@
         const phoneLabel3 = document.getElementById('phoneLabel3').value;
         const remoteAddr1 = document.getElementById('address1').value.trim();
         const remoteAddr2 = document.getElementById('address2').value.trim();
+
         if (!center || !name || !title || !email || !phone1) {
-          document.getElementById('signatureOutput').innerHTML = "Please complete all required fields.";
+          document.getElementById('signatureOutput').innerHTML =
+            "Please complete all required fields.";
           return;
         }
         if (center === 'remote' && (!remoteAddr1 || !remoteAddr2)) {
-          document.getElementById('signatureOutput').innerHTML = "Please enter your full address.";
+          document.getElementById('signatureOutput').innerHTML =
+            "Please enter your full address.";
           return;
         }
+
         const centerName = offices.main.name;
         const addr1 = center === 'main' ? offices.main.address1 : remoteAddr1;
         const addr2 = center === 'main' ? offices.main.address2 : remoteAddr2;
         const phoneLine1 = `<a href="tel:${phone1}" style="color:#6e6e6e;text-decoration:none;">${formatPhone(phone1)}</a> ${phoneLabel1}<br>`;
-        const phoneLine2 = phone2 ? `<a href="tel:${phone2}" style="color:#6e6e6e;text-decoration:none;">${formatPhone(phone2)}</a> ${phoneLabel2}<br>` : '';
-        const phoneLine3 = phone3 ? `<a href="tel:${phone3}" style="color:#6e6e6e;text-decoration:none;">${formatPhone(phone3)}</a> ${phoneLabel3}<br>` : '';
+        const phoneLine2 = phone2
+          ? `<a href="tel:${phone2}" style="color:#6e6e6e;text-decoration:none;">${formatPhone(phone2)}</a> ${phoneLabel2}<br>`
+          : '';
+        const phoneLine3 = phone3
+          ? `<a href="tel:${phone3}" style="color:#6e6e6e;text-decoration:none;">${formatPhone(phone3)}</a> ${phoneLabel3}<br>`
+          : '';
+
         const sigHTML = `
-<div class="sig-text">
-  <p class="name">${name}</p>
-  <p class="title">${title}</p>
-  <p class="org">${centerName}</p>
-  <p class="address">${addr1}<br>${addr2}</p>
-  <p class="contact">${phoneLine1}${phoneLine2}${phoneLine3}</p>
-  <p class="email"><a href="mailto:${email}" style="color:#0066cc;text-decoration:none;">${email}</a><br><a href="https://casrf.org" style="color:#0066cc;text-decoration:none;">casrf.org</a></p>
-</div>
-<div class="sig-logo"><img src="https://static.wixstatic.com/shapes/6ab9c9_27f9ca1905704c89be99955be846fe83.svg" alt="California Scottish Rite Foundation Logo"></div>`;
+  <div class="sig-text">
+    <p class="name">${name}</p>
+    <p class="title">${title}</p>
+    <p class="org">${centerName}</p>
+    <p class="address">${addr1}<br>${addr2}</p>
+    <p class="contact">${phoneLine1}${phoneLine2}${phoneLine3}</p>
+    <p class="email">
+      <a href="mailto:${email}" style="color:#0066cc;text-decoration:none;">${email}</a><br>
+      <a href="https://casrf.org" style="color:#0066cc;text-decoration:none;">casrf.org</a>
+    </p>
+  </div>
+  <div class="sig-logo">
+    <img
+      src="https://static.wixstatic.com/shapes/6ab9c9_27f9ca1905704c89be99955be846fe83.svg"
+      alt="California Scottish Rite Foundation Logo"
+    >
+  </div>`;
         document.getElementById('signatureOutput').innerHTML = sigHTML;
       }
     </script>
   </body>
 </html>
-  
